@@ -1,10 +1,15 @@
 package lab3_2;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +23,7 @@ import edu.iis.mto.staticmock.ConfigurationLoader;
 import edu.iis.mto.staticmock.IncomingNews;
 import edu.iis.mto.staticmock.NewsLoader;
 import edu.iis.mto.staticmock.NewsReaderFactory;
+import edu.iis.mto.staticmock.PublishableNews;
 import edu.iis.mto.staticmock.reader.NewsReader;
 
 @RunWith(PowerMockRunner.class)
@@ -53,4 +59,16 @@ public class NewsLoaderTests {
         newsLoader.loadNews();
         verify(newsReaderMock, times(1)).read();
     }
+
+    @Test
+    public void shouldReturnTwoItemsAddedToPublicList() {
+        PublishableNews publishNews = PublishableNews.create();
+        publishNews.addPublicInfo("public1");
+        publishNews.addPublicInfo("public2");
+        List<String> list = (List<String>) Whitebox.getInternalState(publishNews, "publicContent");
+        assertThat(list.size(), is(equalTo(2)));
+        assertThat(list.get(0), is(equalTo("public1")));
+        assertThat(list.get(1), is(equalTo("public2")));
+    }
+
 }
