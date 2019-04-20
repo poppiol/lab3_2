@@ -91,6 +91,26 @@ public class NewsLoaderTest {
         assertThat(pubNews.publicContent.get(1), is(equalTo("newsNONE2")));
     }
 
+    @Test
+    public void shouldReturnThreeSubscribentNewsFromPublishableNews() {
+        incomingNews.add(new IncomingInfo("newsC", SubsciptionType.C));
+        incomingNews.add(new IncomingInfo("newsA", SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("newsNONE1", SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("newsB", SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("newsNONE2", SubsciptionType.NONE));
+
+        mockStatic(PublishableNews.class);
+
+        when(PublishableNews.create()).thenReturn(new PublishableNewsExtended());
+
+        PublishableNewsExtended pubNews = (PublishableNewsExtended) newsLoader.loadNews();
+        assertThat(pubNews.subscribentContent.size(), is(equalTo(3)));
+        assertThat(pubNews.subscribentContent.get(0), is(equalTo("newsC")));
+        assertThat(pubNews.subscribentContent.get(1), is(equalTo("newsA")));
+        assertThat(pubNews.subscribentContent.get(2), is(equalTo("newsB")));
+
+    }
+
     private class PublishableNewsExtended extends PublishableNews {
 
         private final List<String> publicContent = new ArrayList<>();
