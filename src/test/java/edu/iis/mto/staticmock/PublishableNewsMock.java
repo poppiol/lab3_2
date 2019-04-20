@@ -1,0 +1,23 @@
+package edu.iis.mto.staticmock;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PublishableNewsMock extends PublishableNews {
+    public static PublishableNews create() {
+        return new PublishableNewsMock();
+    }
+
+    private final List<String> publicContent = new ArrayList<>();
+    private final List<String> subscribentContent = new ArrayList<>();
+
+    public void addPublicInfo(String content) {
+        this.publicContent .add(content);
+
+    }
+
+    public void addForSubscription(String content, SubsciptionType subscriptionType) {
+        this.subscribentContent.add(content);
+
+    }
+}

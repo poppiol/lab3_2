@@ -8,6 +8,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -44,8 +49,42 @@ public class NewsLoaderTest {
     @Test
     public void testForNewsReaderAfterNewsLoader() {
         newsLoader.loadNews();
-        verify(newsReader,times(1)).read();
+        verify(newsReader, times(1)).read();
     }
 
+    @Test
+    public void test100TimesForNewsReaderAfterNewsLoader() {
+        int count = 100;
+        for (int i = 0; i < count; i++) {
+            newsLoader.loadNews();
+        }
+        verify(newsReader, times(count)).read();
+    }
 
+    @Test
+    public void testPublishableNewsPublicContentType() {
+        PublishableNews publishableNews = PublishableNews.create();
+        publishableNews.addPublicInfo("test1");
+        assertThat(((List<String>) Whitebox.getInternalState(publishableNews, "publicContent")).size(), is(equalTo(1)));
+    }
+
+    @Test
+    public void testPublishableNewsFor100PublicContentT1ype() {
+        PublishableNews publishableNews = PublishableNews.create();
+        int count = 100;
+        for (int i = 0; i < count; i++) {
+            publishableNews.addPublicInfo("test" + i);
+        }
+        assertThat(((List<String>) Whitebox.getInternalState(publishableNews, "publicContent")).size(),
+                is(equalTo(count)));
+    }
+
+    @Test
+    public void testForPublishableNewsForSubscribentContent() {
+        PublishableNewsMock publishableNewsMock = (PublishableNewsMock) PublishableNewsMock.create();
+        publishableNewsMock.addForSubscription("test", null);
+
+        assertThat(((List<String>) Whitebox.getInternalState(publishableNewsMock, "subscribentContent")).size(),
+                is(equalTo(1)));
+    }
 }
