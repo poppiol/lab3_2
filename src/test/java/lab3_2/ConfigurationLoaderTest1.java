@@ -103,11 +103,31 @@ public class ConfigurationLoaderTest1 {
 
         when(PublishableNews.create()).thenReturn(new PublishableNewsTest());
 
-        PublishableNewsTest pubNews = (PublishableNewsTest) newsLoader.loadNews();
+        PublishableNewsTest publishNewsTest = (PublishableNewsTest) newsLoader.loadNews();
 
-        assertThat(pubNews.publicContent.get(0), is(equalTo("NewNewsNONE1")));
-        assertThat(pubNews.publicContent.get(1), is(equalTo("NewNewsNONE2")));
-        assertThat(pubNews.publicContent.size(), is(equalTo(2)));
+        assertThat(publishNewsTest.publicContent.get(0), is(equalTo("NewNewsNONE1")));
+        assertThat(publishNewsTest.publicContent.get(1), is(equalTo("NewNewsNONE2")));
+        assertThat(publishNewsTest.publicContent.size(), is(equalTo(2)));
+    }
+
+    @Test
+    public void isReturnThreePublicNews() {
+        incomingNews.add(new IncomingInfo("NewNewsNONE1", SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("NewNewsNONE2", SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("NewNewsC", SubsciptionType.C));
+        incomingNews.add(new IncomingInfo("NewNewsB", SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("NewNewsA", SubsciptionType.A));
+
+        mockStatic(PublishableNews.class);
+
+        when(PublishableNews.create()).thenReturn(new PublishableNewsTest());
+
+        PublishableNewsTest publishNewsTest = (PublishableNewsTest) newsLoader.loadNews();
+        assertThat(publishNewsTest.subscribentContent.size(), is(equalTo(3)));
+        assertThat(publishNewsTest.subscribentContent.get(0), is(equalTo("NewNewsC")));
+        assertThat(publishNewsTest.subscribentContent.get(1), is(equalTo("NewNewsB")));
+        assertThat(publishNewsTest.subscribentContent.get(2), is(equalTo("NewNewsA")));
+
     }
 
 }
