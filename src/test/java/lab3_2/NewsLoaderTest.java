@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -78,6 +79,36 @@ public class NewsLoaderTest {
         List<String> content = (List<String>) Whitebox.getInternalState(publishNews, "publicContent");
         assertThat(content.size(), equalTo(4));
 
+    }
+
+    @Test
+    public void shouldReturnProperAmountOfSubscribentContent() {
+        incomingNews.add(new IncomingInfo("subA", SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("subB", SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("subA2", SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("subB2", SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("subN2", SubsciptionType.NONE));
+
+        final PublishableNews publishableNews = extended();
+        mockStatic(PublishableNews.class);
+        when(PublishableNews.create()).thenReturn(publishableNews);
+        PublishableNews publishable = newsLoader.loadNews();
+        List<String> result = (List<String>) Whitebox.getInternalState(publishable, "subscribentContent");
+
+        assertThat(result.size(), equalTo(4));
+        assertThat(result.get(2), equalTo("subA2"));
+    }
+
+    private PublishableNews extended() {
+        return new PublishableNews() {
+
+            private final List<String> subscribentContent = new ArrayList<>();
+
+            @Override
+            public void addForSubscription(String content, SubsciptionType subscriptionType) {
+                this.subscribentContent.add(content);
+            }
+        };
     }
 
 }
