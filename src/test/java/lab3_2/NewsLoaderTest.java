@@ -1,10 +1,14 @@
 package lab3_2;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +23,12 @@ import edu.iis.mto.staticmock.IncomingInfo;
 import edu.iis.mto.staticmock.IncomingNews;
 import edu.iis.mto.staticmock.NewsLoader;
 import edu.iis.mto.staticmock.NewsReaderFactory;
+import edu.iis.mto.staticmock.PublishableNews;
 import edu.iis.mto.staticmock.SubsciptionType;
 import edu.iis.mto.staticmock.reader.NewsReader;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class})
+@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class, PublishableNews.class})
 public class NewsLoaderTest {
 
     private NewsLoader newsLoader;
@@ -61,4 +66,18 @@ public class NewsLoaderTest {
         verify(newsReader, times(1)).read();
 
     }
+
+    @Test
+    public void shouldReturnProperAmountOfItemsAddedToPublicList() {
+        PublishableNews publishNews = PublishableNews.create();
+        publishNews.addPublicInfo("info1");
+        publishNews.addPublicInfo("info2");
+        publishNews.addPublicInfo("info3");
+        publishNews.addPublicInfo("info4");
+
+        List<String> content = (List<String>) Whitebox.getInternalState(publishNews, "publicContent");
+        assertThat(content.size(), equalTo(4));
+
+    }
+
 }
