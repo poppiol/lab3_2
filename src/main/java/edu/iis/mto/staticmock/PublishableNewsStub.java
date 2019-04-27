@@ -16,7 +16,7 @@ public class PublishableNewsStub extends PublishableNews {
         this.publicContent.add(content);
     }
 
-    @Override public void addForSubscription(String content, SubsciptionType subscriptionType) {
+   public void addForSubscription(String content) {
         this.subscribentContent.add(content);
     }
 

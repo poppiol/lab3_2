@@ -16,7 +16,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(PowerMockRunner.class) @PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class}) public class NewsLoaderTest {
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class})
+public class NewsLoaderTest {
 
     private ConfigurationLoader configurationLoader;
     private Configuration configuration;
@@ -48,14 +50,29 @@ import static org.powermock.api.mockito.PowerMockito.*;
         verify(newsReader, times(1)).read();
     }
 
-    @Test public void oneCallLoadNewsShouldResadOnce() {
+    @Test public void threePublicInfoAddedShouldReturnThreePublicInfos() {
         PublishableNewsStub publishableNewsStub = PublishableNewsStub.create();
 
         publishableNewsStub.addPublicInfo("publicInfo1");
         publishableNewsStub.addPublicInfo("publicInfo2");
         publishableNewsStub.addPublicInfo("publicInfo3");
+        publishableNewsStub.addForSubscription("subInfo1");
+        publishableNewsStub.addForSubscription("subInfo2");
+
 
         Assert.assertThat(publishableNewsStub.getPublicContent().size(), is(equalTo(3)));
+    }
+
+    @Test public void twoSubInfoAddedShouldReturnTwoSubInfos() {
+        PublishableNewsStub publishableNewsStub = PublishableNewsStub.create();
+
+        publishableNewsStub.addPublicInfo("publicInfo1");
+        publishableNewsStub.addPublicInfo("publicInfo2");
+        publishableNewsStub.addPublicInfo("publicInfo3");
+        publishableNewsStub.addForSubscription("subInfo1");
+        publishableNewsStub.addForSubscription("subInfo2");
+
+        Assert.assertThat(publishableNewsStub.getSubscribentContent().size(), is(equalTo(2)));
     }
 
 }
