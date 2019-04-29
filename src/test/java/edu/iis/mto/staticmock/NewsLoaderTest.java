@@ -69,4 +69,23 @@ public class NewsLoaderTest {
 
         assertThat(3, is(publishableNews.getPublicContent().size()));
     }
+
+    @Test
+    public void shouldReturnTwoNewsWhichRequiresSubscriptions() {
+        when(ConfigurationLoader.getInstance()).thenReturn(configurationLoaderMock);
+        when(configurationLoaderMock.loadConfiguration()).thenReturn(configurationMock);
+        when(NewsReaderFactory.getReader(any())).thenReturn(newsReaderMock);
+        IncomingNews incomingNews = new IncomingNews();
+        IncomingInfo firstSubNews = new IncomingInfo("firstSubNewsA", SubsciptionType.A);
+        IncomingInfo secondSubNews = new IncomingInfo("firstSubNewsB", SubsciptionType.B);
+        IncomingInfo firstPublicNews = new IncomingInfo("firstPublicNews", SubsciptionType.NONE);
+        incomingNews.add(firstPublicNews);
+        incomingNews.add(firstSubNews);
+        incomingNews.add(secondSubNews);
+        when(newsReaderMock.read()).thenReturn(incomingNews);
+
+        PublishableNews publishableNews = newsLoader.loadNews();
+
+        assertThat(2, is(publishableNews.getSubscribentContent().size()));
+    }
 }
