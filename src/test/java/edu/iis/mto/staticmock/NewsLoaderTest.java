@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -42,5 +44,29 @@ public class NewsLoaderTest {
         newsLoader.loadNews();
 
         verify(configurationLoaderMock).loadConfiguration();
+    }
+
+
+    @Test
+    public void shouldReturnThreePublicNewsWhenThereIsThreeIncomingInfosWithoutSubscription() {
+        when(ConfigurationLoader.getInstance()).thenReturn(configurationLoaderMock);
+        when(configurationLoaderMock.loadConfiguration()).thenReturn(configurationMock);
+        when(NewsReaderFactory.getReader(any())).thenReturn(newsReaderMock);
+        IncomingNews incomingNews = new IncomingNews();
+        IncomingInfo firstPublicNews = new IncomingInfo("firstPublicNews", SubsciptionType.NONE);
+        IncomingInfo secondPublicNews = new IncomingInfo("secondPublicNews", SubsciptionType.NONE);
+        IncomingInfo thirdPublicNews = new IncomingInfo("thirdPublicNews", SubsciptionType.NONE);
+        IncomingInfo firstNonpublicNews = new IncomingInfo("firstNonpublicNews", SubsciptionType.A);
+        IncomingInfo secondNonpublicNews = new IncomingInfo("secondNonpublicNews", SubsciptionType.B);
+        incomingNews.add(firstPublicNews);
+        incomingNews.add(secondPublicNews);
+        incomingNews.add(thirdPublicNews);
+        incomingNews.add(firstNonpublicNews);
+        incomingNews.add(secondNonpublicNews);
+        when(newsReaderMock.read()).thenReturn(incomingNews);
+
+        PublishableNews publishableNews = newsLoader.loadNews();
+
+        assertThat(3, is(publishableNews.getPublicContent().size()));
     }
 }
