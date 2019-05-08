@@ -18,8 +18,15 @@ public class PublishableNews {
 	}
 
 	public void addForSubscription(String content, SubsciptionType subscriptionType) {
-		// TODO Auto-generated method stub
+		subscribentContent.add(content);
 		
 	}
 
+	public List<String> getPublicContent() {
+		return publicContent;
+	}
+
+	public List<String> getSubscribentContent() {
+		return subscribentContent;
+	}
 }
