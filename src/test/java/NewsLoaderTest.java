@@ -64,4 +64,11 @@ public class NewsLoaderTest {
         List<String> subscribentContent = Whitebox.getInternalState(publishableNews, "subscribentContent");
         Assert.assertThat("should return 3", subscribentContent.size(), is(3));
     }
+
+    @Test
+    public void loadNewsTestMethodWhereSecondInfoIsBValue() {
+        publishableNews = newsLoader.loadNews();
+        List<String> subscribentContent = Whitebox.getInternalState(publishableNews, "subscribentContent");
+        Assert.assertThat("should return b", subscribentContent.get(1), is("b"));
+    }
 }
