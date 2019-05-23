@@ -11,6 +11,8 @@ import org.powermock.reflect.Whitebox;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -70,5 +72,12 @@ public class NewsLoaderTest {
         publishableNews = newsLoader.loadNews();
         List<String> subscribentContent = Whitebox.getInternalState(publishableNews, "subscribentContent");
         Assert.assertThat("should return b", subscribentContent.get(1), is("b"));
+    }
+
+    @Test
+    public void loadNewsTestMethodLoadConfigurationShouldCallOne() {
+        publishableNews = newsLoader.loadNews();
+        verify(configurationLoader, times(1)).loadConfiguration();
+
     }
 }
