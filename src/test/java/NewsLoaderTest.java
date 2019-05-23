@@ -57,4 +57,11 @@ public class NewsLoaderTest {
         List<String> publicMessages = Whitebox.getInternalState(publishableNews, "publicContent");
         Assert.assertThat("should return 1", publicMessages.size(), is(1));
     }
+
+    @Test
+    public void loadNewsTestMethodWhereInListIsThreeSubscriptionInfoShouldReturnOne() {
+        publishableNews = newsLoader.loadNews();
+        List<String> subscribentContent = Whitebox.getInternalState(publishableNews, "subscribentContent");
+        Assert.assertThat("should return 3", subscribentContent.size(), is(3));
+    }
 }
